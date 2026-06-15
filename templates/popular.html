@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Popular Books{% endblock %}
+
+{% block content %}
+<h2 class="fw-bold mb-4">🏆 Most Popular Books</h2>
+
+{% if book_stats %}
+<div class="row row-cols-1 row-cols-md-3 g-4">
+  {% for item in book_stats %}
+  <div class="col">
+    <div class="card h-100 shadow-sm position-relative">
+      {% if loop.index == 1 %}
+        <span class="position-absolute top-0 start-0 m-2 fs-3">🥇</span>
+      {% elif loop.index == 2 %}
+        <span class="position-absolute top-0 start-0 m-2 fs-3">🥈</span>
+      {% elif loop.index == 3 %}
+        <span class="position-absolute top-0 start-0 m-2 fs-3">🥉</span>
+      {% endif %}
+      <img src="/static/images/{{ item.book.image }}" class="card-img-top"
+           alt="{{ item.book.title }}" style="height: 240px; object-fit: cover;">
+      <div class="card-body">
+        <span class="badge bg-secondary mb-2">{{ item.book.genre }}</span>
+        <h5 class="card-title fw-bold">{{ item.book.title }}</h5>
+        <p class="card-text text-muted mb-1">✍️ {{ item.book.author }}</p>
+        {% if item.avg > 0 %}
+          <p class="text-warning fw-bold mb-0">{{ item.avg }} ⭐
+            <span class="text-muted fw-normal small">({{ item.count }} vote{{ 's' if item.count != 1 }})</span>
+          </p>
+        {% else %}
+          <p class="text-muted small mb-0">No ratings yet</p>
+        {% endif %}
+      </div>
+      <div class="card-footer bg-white border-top-0">
+        <a href="/book/{{ item.book.id }}" class="btn btn-dark btn-sm w-100">See Details</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+  <p class="text-muted">No books yet.</p>
+{% endif %}
+{% endblock %}

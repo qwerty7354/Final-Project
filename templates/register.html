@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h3 class="card-title fw-bold mb-4 text-center">📝 Register</h3>
+
+                {% for errors in form.errors.values() %}
+                    <div class="alert alert-danger">
+                        {% for error in errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endfor %}
+
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        {{ form.username(class="form-control", placeholder="Choose a username") }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        {{ form.password(class="form-control", placeholder="Min 6 characters") }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirm Password</label>
+                        {{ form.confirm_password(class="form-control", placeholder="Repeat password") }}
+                    </div>
+                    {{ form.register(class="btn btn-dark w-100") }}
+                </form>
+
+                <p class="text-center text-muted mt-3 mb-0">
+                    Already have an account? <a href="/login">Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

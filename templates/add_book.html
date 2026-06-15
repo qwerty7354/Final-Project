@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h3 class="fw-bold mb-4">📚 {{ title }}</h3>
+
+                {% for errors in form.errors.values() %}
+                    <div class="alert alert-danger">
+                        {% for error in errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endfor %}
+
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        <label class="form-label">Book Cover</label>
+                        {{ form.image(class="form-control", accept=".png,.jpg,.jpeg") }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        {{ form.title(class="form-control", placeholder="Book title") }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Author</label>
+                        {{ form.author(class="form-control", placeholder="Author name") }}
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label">Year</label>
+                            {{ form.year(class="form-control", placeholder="e.g. 1984") }}
+                        </div>
+                        <div class="col mb-3">
+                            <label class="form-label">Genre</label>
+                            {{ form.genre(class="form-select") }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        {{ form.description(class="form-control", rows=4, placeholder="Short description of the book...") }}
+                    </div>
+                    {{ form.submit(class="btn btn-dark w-100") }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

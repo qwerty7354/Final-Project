@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}About — BookShelf{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-5">
+                <h2 class="fw-bold mb-3">📚 About BookShelf</h2>
+                <hr>
+                <p class="lead">
+                    BookShelf is a personal book catalog where you can discover, track, and rate books.
+                </p>
+                <h5 class="mt-4 fw-bold">🎯 Purpose</h5>
+                <p>
+                    This site helps book lovers organize their reading lists, explore new titles,
+                    and share ratings with the community.
+                </p>
+                <h5 class="mt-4 fw-bold">✨ Features</h5>
+                <ul>
+                    <li>Browse books by genre, author, and year</li>
+                    <li>View detailed info and ratings for each book</li>
+                    <li>Rate books on a 1–5 star scale</li>
+                    <li>Admin users can add, edit, and delete books</li>
+                    <li>Register and log in to participate</li>
+                </ul>
+                <h5 class="mt-4 fw-bold">🛠️ Built With</h5>
+                <p>Flask · SQLAlchemy · Bootstrap 5 · Flask-Login · Flask-WTF</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

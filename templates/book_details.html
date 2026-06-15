@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+<a href="/" class="btn btn-outline-secondary btn-sm mb-4">⬅️ Back</a>
+
+<div class="row g-4">
+  <div class="col-md-4">
+    <img src="/static/images/{{ book.image }}" class="img-fluid rounded shadow" alt="{{ book.title }}">
+  </div>
+  <div class="col-md-8">
+    <span class="badge bg-secondary mb-2">{{ book.genre }}</span>
+    <h2 class="fw-bold">{{ book.title }}</h2>
+    <p class="text-muted fs-5">✍️ {{ book.author }} &nbsp;|&nbsp; 📅 {{ book.year }}</p>
+    <hr>
+    <p>{{ book.description }}</p>
+
+    <div class="mt-4">
+      <h5>⭐ Ratings</h5>
+      {% if avg %}
+        <p class="fs-4 fw-bold text-warning">
+          {{ avg }} / 5
+          <span class="text-muted fs-6">({{ ratings|length }} vote{{ 's' if ratings|length != 1 }})</span>
+        </p>
+      {% else %}
+        <p class="text-muted">No ratings yet.</p>
+      {% endif %}
+
+      {% if current_user.is_authenticated %}
+        {% if user_has_rated %}
+          <div class="d-flex align-items-center gap-3 mt-2">
+            <span class="text-muted">Your rating: <strong>{{ user_rating.score }} ⭐</strong></span>
+            <a href="/edit_rating/{{ user_rating.id }}"   class="btn btn-outline-warning btn-sm">Edit</a>
+            <a href="/delete_rating/{{ user_rating.id }}" class="btn btn-outline-danger  btn-sm">Remove</a>
+          </div>
+        {% else %}
+          <form method="POST" action="/add_rating/{{ book.id }}" class="d-flex align-items-center gap-3 mt-2">
+            {{ rating_form.hidden_tag() }}
+            {{ rating_form.score(class="form-select w-auto") }}
+            {{ rating_form.submit(class="btn btn-warning btn-sm") }}
+          </form>
+        {% endif %}
+      {% else %}
+        <p class="text-muted mt-2">შეფასებისთვის <a href="/login">შედი სისტემაში</a>.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="mt-5">
+  <h5>💬 Comments ({{ comments|length }})</h5>
+
+  {% if current_user.is_authenticated %}
+  <form method="POST" action="/add_comment/{{ book.id }}" class="mb-4">
+    {{ comment_form.hidden_tag() }}
+    {{ comment_form.text(class="form-control mb-2", rows=3, placeholder="Write a comment...") }}
+    {{ comment_form.submit(class="btn btn-dark btn-sm") }}
+  </form>
+  {% else %}
+    <p class="text-muted">კომენტარისთვის <a href="/login">შედი სისტემაში</a>.</p>
+  {% endif %}
+
+  {% for comment in comments %}
+  <div class="card mb-3 shadow-sm">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <strong>👤 {{ comment.user.username }}</strong>
+          <span class="text-muted small ms-2">{{ comment.created_at.strftime("%Y-%m-%d %H:%M") }}</span>
+        </div>
+        {% if current_user.is_authenticated and comment.user_id == current_user.id %}
+        <a href="/delete_comment/{{ comment.id }}" class="btn btn-outline-danger btn-sm">Delete</a>
+        {% endif %}
+      </div>
+      <p class="mt-2 mb-0">{{ comment.text }}</p>
+    </div>
+  </div>
+  {% else %}
+    <p class="text-muted">No comments yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

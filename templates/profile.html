@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Profile — {{ current_user.username }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm mb-4">
+      <div class="card-body p-4">
+        <h3 class="fw-bold">👤 {{ current_user.username }}</h3>
+        <span class="badge bg-dark">{{ current_user.role }}</span>
+        <div class="row mt-3 text-center">
+          <div class="col">
+            <h4 class="fw-bold text-warning">{{ ratings|length }}</h4>
+            <p class="text-muted mb-0">Books Rated</p>
+          </div>
+          <div class="col">
+            <h4 class="fw-bold text-primary">{{ comments|length }}</h4>
+            <p class="text-muted mb-0">Comments</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h5 class="fw-bold mb-3">⭐ My Ratings</h5>
+    {% if ratings %}
+      {% for rating in ratings %}
+      <div class="card mb-2 shadow-sm">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <div>
+            <a href="/book/{{ rating.book.id }}" class="fw-bold text-decoration-none">{{ rating.book.title }}</a>
+            <span class="text-warning ms-2">{{ rating.score }} ⭐</span>
+          </div>
+          <div class="d-flex gap-2">
+            <a href="/edit_rating/{{ rating.id }}"   class="btn btn-outline-warning btn-sm">Edit</a>
+            <a href="/delete_rating/{{ rating.id }}" class="btn btn-outline-danger  btn-sm">Remove</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-muted">No ratings yet.</p>
+    {% endif %}
+
+    <h5 class="fw-bold mb-3 mt-4">💬 My Comments</h5>
+    {% if comments %}
+      {% for comment in comments %}
+      <div class="card mb-2 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <a href="/book/{{ comment.book.id }}" class="fw-bold text-decoration-none">{{ comment.book.title }}</a>
+              <span class="text-muted small ms-2">{{ comment.created_at.strftime("%Y-%m-%d %H:%M") }}</span>
+            </div>
+            <a href="/delete_comment/{{ comment.id }}" class="btn btn-outline-danger btn-sm">Delete</a>
+          </div>
+          <p class="mt-2 mb-0 text-muted">{{ comment.text }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-muted">No comments yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
