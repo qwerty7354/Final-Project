@@ -22,7 +22,7 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         hashed_pw = generate_password_hash(form.password.data)
-        new_user  = User(username=form.username.data, password=hashed_pw)
+        new_user = User(username=form.username.data, password=hashed_pw)
         new_user.create()
         flash("წარმატებით დარეგისტრირდი!")
         return redirect("/")
@@ -55,8 +55,10 @@ def add_book():
     form = BookForm()
     if form.validate_on_submit():
         new_book = Book(
-            title=form.title.data,       author=form.author.data,
-            year=form.year.data,         genre=form.genre.data,
+            title=form.title.data,
+            author=form.author.data,
+            year=form.year.data,
+            genre=form.genre.data,
             description=form.description.data,
         )
         img = form.image.data
@@ -77,12 +79,12 @@ def update_book(book_id):
         flash("წიგნი ვერ მოიძებნა.")
         return redirect("/")
     form = BookForm(title=book.title, author=book.author,
-                    year=book.year,   genre=book.genre, description=book.description)
+                    year=book.year, genre=book.genre, description=book.description)
     if form.validate_on_submit():
-        book.title       = form.title.data
-        book.author      = form.author.data
-        book.year        = form.year.data
-        book.genre       = form.genre.data
+        book.title = form.title.data
+        book.author = form.author.data
+        book.year = form.year.data
+        book.genre = form.genre.data
         book.description = form.description.data
         img = form.image.data
         if img and img.filename:
@@ -112,19 +114,16 @@ def view_book_details(book_id):
     if not book:
         flash("წიგნი ვერ მოიძებნა.")
         return redirect("/")
-
-    ratings      = Rating.query.filter_by(book_id=book_id).all()
-    comments     = Comment.query.filter_by(book_id=book_id).order_by(Comment.created_at.desc()).all()
-    avg          = round(sum(r.score for r in ratings) / len(ratings), 1) if ratings else None
-    rating_form  = RatingForm()
+    ratings = Rating.query.filter_by(book_id=book_id).all()
+    comments = Comment.query.filter_by(book_id=book_id).order_by(Comment.created_at.desc()).all()
+    avg = round(sum(r.score for r in ratings) / len(ratings), 1) if ratings else None
+    rating_form = RatingForm()
     comment_form = CommentForm()
-
-    user_rating    = None
+    user_rating = None
     user_has_rated = False
     if current_user.is_authenticated:
-        user_rating    = Rating.query.filter_by(book_id=book_id, user_id=current_user.id).first()
+        user_rating = Rating.query.filter_by(book_id=book_id, user_id=current_user.id).first()
         user_has_rated = user_rating is not None
-
     return render_template("book_details.html",
                            book=book, ratings=ratings, avg=avg,
                            rating_form=rating_form, comment_form=comment_form,
@@ -200,11 +199,11 @@ def delete_comment(comment_id):
 
 @app.route("/popular")
 def popular():
-    books      = Book.query.all()
+    books = Book.query.all()
     book_stats = []
     for book in books:
         ratings = Rating.query.filter_by(book_id=book.id).all()
-        avg     = round(sum(r.score for r in ratings) / len(ratings), 1) if ratings else 0
+        avg = round(sum(r.score for r in ratings) / len(ratings), 1) if ratings else 0
         book_stats.append({"book": book, "avg": avg, "count": len(ratings)})
     book_stats.sort(key=lambda x: (x["avg"], x["count"]), reverse=True)
     return render_template("popular.html", book_stats=book_stats)
@@ -213,9 +212,8 @@ def popular():
 @app.route("/profile")
 @login_required
 def profile():
-    ratings  = Rating.query.filter_by(user_id=current_user.id).all()
-    comments = Comment.query.filter_by(user_id=current_user.id)\
-                            .order_by(Comment.created_at.desc()).all()
+    ratings = Rating.query.filter_by(user_id=current_user.id).all()
+    comments = Comment.query.filter_by(user_id=current_user.id).order_by(Comment.created_at.desc()).all()
     return render_template("profile.html", ratings=ratings, comments=comments)
 
 
